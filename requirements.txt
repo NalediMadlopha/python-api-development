@@ -2,6 +2,6 @@ psycopg2-binary
 pydantic~=1.10.1
 sqlalchemy~=1.4.40
 uvicorn
-fastapi == 0.81.0
-python-jose == 3.3.0
+fastapi==0.81.0
+python-jose==3.3.0
 passlib~=1.7.4

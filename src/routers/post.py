@@ -1,5 +1,4 @@
-from src import oauth2
-from .. import models, schemas
+from .. import models, schemas, oauth2
 from .. database import get_db
 from fastapi import Response, status, HTTPException, APIRouter
 from fastapi.params import Depends
@@ -12,21 +11,20 @@ router = APIRouter(
 )
 
 @router.get("/{id}", response_model=schemas.PostResponse)
-def get_post(id: int, session: Session = Depends(get_db)):
+def get_post(id: int, session: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user)):
     post = session.query(models.Post).get(id)
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id: {id} was not found")
-
     return post
 
 
 @router.get("/", response_model=List[schemas.PostResponse])
-def get_posts(session: Session = Depends(get_db)):
+def get_posts(session: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user)):
     return session.query(models.Post).all()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
-def create_posts(post: schemas.PostCreate, session: Session = Depends(get_db), get_current_usr: int = Depends(oauth2.get_current_user)):
+def create_posts(post: schemas.PostCreate, session: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user)):
     new_post = models.Post(**post.dict())
     session.add(new_post)
     session.commit()
@@ -35,7 +33,7 @@ def create_posts(post: schemas.PostCreate, session: Session = Depends(get_db), g
 
 
 @router.put("/{id}", response_model=schemas.PostResponse)
-def update_post(id: int, updated_post: schemas.PostUpdate, session: Session = Depends(get_db)):
+def update_post(id: int, updated_post: schemas.PostUpdate, session: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user)):
     query = session.query(models.Post).filter(models.Post.id == id)
     post = query.first()
 
@@ -49,7 +47,7 @@ def update_post(id: int, updated_post: schemas.PostUpdate, session: Session = De
 
 
 @router.delete("/{id}")
-def delete_post(id: int, session: Session = Depends(get_db)):
+def delete_post(id: int, session: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user)):
     post = session.query(models.Post).filter(models.Post.id == id)
 
     if not post.first():
