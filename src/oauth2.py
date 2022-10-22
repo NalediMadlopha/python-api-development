@@ -1,5 +1,3 @@
-from datetime import datetime
-import imp
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from . import schemas, database, models
@@ -13,6 +11,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 SECRET_KEY = "5595e5d8cab818d26033ce5513ce799b4161ec1739c75bcb00781ea874f2bb8b"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 
 def create_access_token(data: dict):
     to_encode = data.copy()

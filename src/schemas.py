@@ -8,6 +8,7 @@ class PostBase(BaseModel):
     content: str
     published: bool
 
+
 class PostCreate(PostBase):
     pass
 
@@ -19,6 +20,7 @@ class PostUpdate(PostBase):
 class PostResponse(PostBase):
     id: int
     created_at: datetime
+    owner_id: int
 
     class Config:
         orm_mode = True

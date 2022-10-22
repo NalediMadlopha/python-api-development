@@ -16,7 +16,7 @@ app.include_router(auth.router)
 while True:
     try:
         conn = psycopg2.connect(host='127.0.0.1', port='5432', database='fastapi', user='postgres',
-                                password='dev123', cursor_factory=RealDictCursor)
+                                password='pwd123', cursor_factory=RealDictCursor)
         cursor = conn.cursor()
         print('Database connection was successful!')
         break
