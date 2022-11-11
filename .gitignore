@@ -2,4 +2,5 @@
 src/__pycache__
 src/routers/__pycache__
 .idea
-venv
+venv/
+.env
