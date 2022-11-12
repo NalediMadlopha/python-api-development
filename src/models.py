@@ -5,6 +5,16 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    email = Column(String, nullable=False, unique=True)
+    password = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    phone_number = Column(String)
+
+
 class Post(Base):
     __tablename__ = "post"
 
@@ -13,23 +23,15 @@ class Post(Base):
     content = Column(String, nullable=False)
     published = Column(Boolean, server_default='FALSE', default=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
-    owner_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
     owner = relationship("User")
 
-
-class User(Base):
-    __tablename__ = "user"
-
-    id = Column(Integer, primary_key=True, nullable=False)
-    email = Column(String, nullable=False, unique=True)
-    password = Column(String, nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 
 class Vote(Base):
     __tablename__ = "vote"
 
-    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
     post_id = Column(Integer, ForeignKey("post.id", ondelete="CASCADE"), primary_key=True)
 
