@@ -56,7 +56,7 @@ def get_posts(session: Session = Depends(get_db), current_user=Depends(oauth2.ge
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
-def create_posts(post: schemas.PostCreate, session: Session = Depends(get_db), current_user=Depends(oauth2.get_current_user)):
+def create_post(post: schemas.PostCreate, session: Session = Depends(get_db), current_user=Depends(oauth2.get_current_user)):
     new_post = models.Post(**post.dict())
     new_post.owner_id = current_user.id
 
@@ -74,7 +74,7 @@ def update_post(id: int, updated_post: schemas.PostUpdate, session: Session = De
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id: {id} was not found")
 
-    if post.owner_id != oauth2.get_current_user.id:
+    if post.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to perform requested action")
 
     query.update(updated_post.dict(), synchronize_session=False)
